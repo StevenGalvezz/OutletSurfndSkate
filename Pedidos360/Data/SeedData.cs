@@ -21,7 +21,7 @@ namespace Pedidos360.Data
                 context.Categorias.Add(categoriaDefault);
                 context.SaveChanges();
 
-                // ============= Aquí meter luego los 10-20 productos de prueba automáticamente ===================
+                // ============== Aquí meter luego los 10-20 productos de prueba automáticamente ===================
             }
         }
     }
