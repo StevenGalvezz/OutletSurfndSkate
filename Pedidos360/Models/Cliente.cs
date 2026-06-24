@@ -13,6 +13,7 @@ namespace Pedidos360.Models
 
         [Required(ErrorMessage = "La cédula física o jurídica es obligatoria.")]
         [StringLength(20, ErrorMessage = "La cédula no puede exceder los 20 caracteres.")]
+        [RegularExpression(@"^[0-9\-]+$", ErrorMessage = "La cédula solo puede contener números y guiones.")]
         public string Cedula { get; set; } = null!;
 
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
@@ -20,7 +21,9 @@ namespace Pedidos360.Models
         [StringLength(100)]
         public string Correo { get; set; } = null!;
 
+        [Required(ErrorMessage = "El teléfono es obligatorio")]
         [StringLength(15, ErrorMessage = "El teléfono no puede exceder los 15 caracteres.")]
+        [RegularExpression(@"^[0-9\- ]+$", ErrorMessage = "El teléfono solo puede contener números, espacios o guiones.")]
         public string? Telefono { get; set; } = null!;
 
         [Required(ErrorMessage = "La dirección es obligatoria.")]

@@ -32,8 +32,6 @@ namespace Pedidos360.Models
         [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo.")]
         public int Stock { get; set; }
 
-        // Se guarda la ruta física o web de la imagen. El enunciado dice obligatoria al crear,
-        // lo controlaremos mejor en un ViewModel más adelante, pero lo dejamos requerido en BD.
         [Required(ErrorMessage = "La imagen del producto es obligatoria.")]
         public string ImagenUrl { get; set; } = null!;
 

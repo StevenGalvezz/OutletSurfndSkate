@@ -1,8 +1,8 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Pedidos360.Models;
 using Pedidos360.Data;
+using Pedidos360.Models;
 
 public class ProductosController : Controller
 {
@@ -14,9 +14,10 @@ public class ProductosController : Controller
     }
 
     // GET: PRODUCTOS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Productos.ToListAsync());
+        var productosConCategoria = await _context.Productos.Include(p => p.Categoria).ToListAsync();
+        return View(productosConCategoria);
     }
 
     // GET: PRODUCTOS/Details/5
@@ -28,7 +29,9 @@ public class ProductosController : Controller
         }
 
         var producto = await _context.Productos
+            .Include(p => p.Categoria)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (producto == null)
         {
             return NotFound();
@@ -40,15 +43,14 @@ public class ProductosController : Controller
     // GET: PRODUCTOS/Create
     public IActionResult Create()
     {
+        ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nombre");
         return View();
     }
 
     // POST: PRODUCTOS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Nombre,CategoriaId,Categoria,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
+    public async Task<IActionResult> Create([Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
     {
         if (ModelState.IsValid)
         {
@@ -56,6 +58,8 @@ public class ProductosController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nombre", producto.CategoriaId);
         return View(producto);
     }
 
@@ -72,16 +76,17 @@ public class ProductosController : Controller
         {
             return NotFound();
         }
+
+        ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nombre", producto.CategoriaId);
         return View(producto);
     }
 
     // POST: PRODUCTOS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,CategoriaId,Categoria,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
     {
+
         if (id != producto.Id)
         {
             return NotFound();
@@ -107,6 +112,8 @@ public class ProductosController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
+        ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nombre", producto.CategoriaId);
         return View(producto);
     }
 
@@ -119,7 +126,9 @@ public class ProductosController : Controller
         }
 
         var producto = await _context.Productos
+            .Include(p => p.Categoria)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (producto == null)
         {
             return NotFound();

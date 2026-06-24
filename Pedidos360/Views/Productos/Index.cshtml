@@ -4,19 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Productos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Crear nuevo producto</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoriaId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Categoria)
@@ -36,42 +34,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.Activo)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CategoriaId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Categoria)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ImpuestoPorc)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ImagenUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Activo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Categoria.Nombre)
+                </td>
+                <td>
+                    @item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImpuestoPorc)%
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImagenUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

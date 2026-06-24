@@ -20,6 +20,27 @@ namespace Pedidos360
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            // 1. Configuración de la Cultura es-CR personalizada para Costa Rica (Coma para miles, punto para decimales)
+            var defaultCulture = new System.Globalization.CultureInfo("es-CR");
+            defaultCulture.NumberFormat.CurrencyGroupSeparator = ",";    // Coma para los miles (ej: ₡100,000.00)
+            defaultCulture.NumberFormat.CurrencyDecimalSeparator = ".";  // Punto para los decimales
+            defaultCulture.NumberFormat.NumberGroupSeparator = ",";      // Aplica también para números normales
+            defaultCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(defaultCulture),
+                SupportedCultures = new List<System.Globalization.CultureInfo> { defaultCulture },
+                SupportedUICultures = new List<System.Globalization.CultureInfo> { defaultCulture }
+            };
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = localizationOptions.DefaultRequestCulture;
+                options.SupportedCultures = localizationOptions.SupportedCultures;
+                options.SupportedUICultures = localizationOptions.SupportedUICultures;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -37,6 +58,9 @@ namespace Pedidos360
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            // 2. Activación del Middleware de localización justo después de UseRouting
+            app.UseRequestLocalization(localizationOptions);
+
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -47,6 +71,7 @@ namespace Pedidos360
             app.MapRazorPages()
                .WithStaticAssets();
 
+            // 3. Inicialización automática de la base de datos con los datos de prueba (SeedData)
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
