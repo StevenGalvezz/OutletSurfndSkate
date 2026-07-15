@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Pedidos360
 {
@@ -50,10 +51,15 @@ namespace Pedidos360
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Captura cualquier excepción no controlada que ocurra en la aplicación
+            // y redirige al usuario a la página personalizada del Error 500.
+            app.UseExceptionHandler("/Error/500");
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -62,6 +68,11 @@ namespace Pedidos360
             app.UseRequestLocalization(localizationOptions);
 
             app.UseAuthorization();
+
+            // Si la aplicación devuelve un Error 404, redirige al usuario
+            // a la página personalizada de "Página no encontrada".
+            app.UseStatusCodePagesWithReExecute("/Error/404");
+
 
             app.MapStaticAssets();
             app.MapControllerRoute(

@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Página no encontrada";
+}
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada (404)</title>
+    <link rel="stylesheet" href="~/css/error.css" asp-append-version="true" />
+</head>
+<body>
+    <main>
+        <h1>ERROR 404</h1>
+        <h2>¡Ups! Te has perdido en el espacio</h2>
+        <p>La página que buscas no existe o cambió de lugar. No te preocupes, puedes volver al inicio</p>
+
+        <a class="boton-volver" asp-controller="Home" asp-action="Index">
+            Volver al inicio
+        </a>
+    </main>
+</body>

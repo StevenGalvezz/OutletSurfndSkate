@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Error del servidor";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error del servidor (500)</title>
+    <link rel="stylesheet" href="~/css/error.css" asp-append-version="true" />
+</head>
+<body>
+    <main>
+        <h1>ERROR 500</h1>
+        <h2>¡Ups! Algo ha salido mal de nuestro lado</h2>
+        <p>
+            Estamos teniendo problemas técnicos en este momento.
+            Nuestro equipo de ingenieros ya está trabajando para solucionarlo.
+            Por favor, intenta volver más tarde
+        </p>
+        <a class="boton-volver" asp-controller="Home" asp-action="Index">
+            Volver al inicio
+        </a>
+    </main>
+</body>
