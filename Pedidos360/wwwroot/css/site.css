@@ -1,31 +1,437 @@
-html {
-  font-size: 14px;
+/* ==========================================================
+   Identidad de la tienda (misma línea que las páginas de error):
+   tipografía Oswald, look de etiqueta de outlet, ahora para
+   todo el sitio y con variante oscura.
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #f4f4f1;
+  --surface: #ffffff;
+  --ink: #17181b;
+  --ink-soft: #6c6e72;
+  --border: rgba(23, 24, 27, 0.16);
+  --accent: #ff5c1a;
+  --accent-ink: #ffffff;
+  --danger: #b3261e;
+  --success: #2f8f4e;
+  --shadow: 3px 3px 0 var(--ink);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+:root[data-theme="dark"] {
+  --bg: #121214;
+  --surface: #1b1c1f;
+  --ink: #f2f2ef;
+  --ink-soft: #a6a7ab;
+  --border: rgba(255, 255, 255, 0.16);
+  --accent: #ff7a3d;
+  --accent-ink: #17181b;
+  --danger: #ff6b62;
+  --success: #4fbf74;
+  --shadow: 3px 3px 0 #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121214;
+    --surface: #1b1c1f;
+    --ink: #f2f2ef;
+    --ink-soft: #a6a7ab;
+    --border: rgba(255, 255, 255, 0.16);
+    --accent: #ff7a3d;
+    --accent-ink: #17181b;
+    --danger: #ff6b62;
+    --success: #4fbf74;
+    --shadow: 3px 3px 0 #000;
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+* {
+  box-sizing: border-box;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+  font-size: 16px;
 }
 
 body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, sans-serif;
+  background-image: radial-gradient(circle, rgba(128, 128, 128, 0.12) 1px, transparent 1.5px);
+  background-size: 16px 16px;
+  min-height: 100%;
   margin-bottom: 60px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+h1, h2, h3, .navbar-brand {
+  font-family: 'Oswald', sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--ink);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ==========================================================
+   Barra de navegación
+   ========================================================== */
+header .navbar {
+  background-color: var(--surface) !important;
+  border-bottom: 2px solid var(--ink);
+  box-shadow: none !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.navbar .nav-link {
+  color: var(--ink) !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.navbar .nav-link:hover {
+  color: var(--accent) !important;
+}
+
+#theme-toggle {
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+#theme-toggle:hover {
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+/* ==========================================================
+   Botones — cuadrados, con borde marcado, nada de degradados
+   ========================================================== */
+.btn {
+  border-radius: 0;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  border: 2px solid var(--ink);
+  transition: transform 0.1s ease;
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-primary:hover {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.btn-outline-secondary, .btn-secondary {
+  background-color: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.btn-outline-secondary:hover, .btn-secondary:hover {
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+.btn-danger {
+  background-color: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger);
+  color: var(--bg);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+.acciones-fila {
+  display: flex;
+  gap: 6px;
+}
+
+/* ==========================================================
+   Tarjetas / superficies
+   ========================================================== */
+.card, .ticket {
+  background-color: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow);
+}
+
+/* ==========================================================
+   Tablas — más de recibo de tienda que de grid genérico
+   ========================================================== */
+.table {
+  background-color: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.table thead {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+}
+
+.table > :not(caption) > * > * {
+  background-color: var(--surface);
+  color: var(--ink);
+  border-bottom-color: var(--border);
+}
+
+.table-hover > tbody > tr:hover > * {
+  background-color: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+
+/* ==========================================================
+   Formularios
+   ========================================================== */
+.form-control, .form-select {
+  background-color: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--border);
+  border-radius: 0;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--accent) 35%, transparent);
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.text-danger {
+  color: var(--danger) !important;
+}
+
+/* ==========================================================
+   Footer
+   ========================================================== */
+.footer {
+  background-color: var(--surface);
+  border-top: 2px solid var(--ink) !important;
+  color: var(--ink-soft);
+}
+
+/* ==========================================================
+   Página de inicio
+   ========================================================== */
+.portada {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.portada h1 {
+  font-size: clamp(2.6rem, 7vw, 4.5rem);
+  margin-bottom: 8px;
+}
+
+.portada p {
+  max-width: 520px;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.portada-accesos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ==========================================================
+   Pantalla de armado de pedido
+   ========================================================== */
+.buscador-producto {
+  position: relative;
+}
+
+.resultados-busqueda {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  background-color: var(--surface);
+  border: 2px solid var(--ink);
+  border-top: none;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.resultados-busqueda button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.resultados-busqueda button:hover {
+  background-color: color-mix(in srgb, var(--accent) 15%, var(--surface));
+}
+
+.resultados-busqueda .sin-resultados {
+  padding: 8px 12px;
+  color: var(--ink-soft);
+  cursor: default;
+}
+
+.resumen-totales {
+  font-family: 'Oswald', sans-serif;
+}
+
+.resumen-totales .fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.resumen-totales .fila.total {
+  border-top: 2px solid var(--ink);
+  margin-top: 8px;
+  padding-top: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
+  color: var(--ink-soft);
   text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* ==========================================================
+   Fotos de producto
+   ========================================================== */
+.imagen-producto {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  background-color: var(--surface);
+  display: block;
+}
+
+.imagen-producto.chica {
+  width: 64px;
+  height: 64px;
+  aspect-ratio: 1 / 1;
+}
+
+/* ==========================================================
+   Tienda (catálogo del cliente)
+   ========================================================== */
+.grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.tarjeta-producto {
+  background-color: var(--surface);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-producto .cuerpo {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.tarjeta-producto .precio {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ==========================================================
+   Carrito
+   ========================================================== */
+.carrito-linea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+}
+
+.carrito-linea .info {
+  flex: 1;
+}
+
+.carrito-badge {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 5px;
+  margin-left: 4px;
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
 }

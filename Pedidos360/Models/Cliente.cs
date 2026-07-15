@@ -29,5 +29,10 @@ namespace Pedidos360.Models
         [Required(ErrorMessage = "La dirección es obligatoria.")]
         [StringLength(250, ErrorMessage = "La dirección no puede exceder los 250 caracteres.")]
         public string Direccion { get; set; } = null!;
+
+        // Liga este cliente con su cuenta de acceso (login) cuando se registró
+        // él mismo. Los clientes que solo carga el administrador (sin login
+        // propio) se quedan con esto en null.
+        public string? UsuarioId { get; set; }
     }
 }

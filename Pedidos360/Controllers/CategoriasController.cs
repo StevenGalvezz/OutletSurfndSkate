@@ -1,9 +1,12 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Models;
 using Pedidos360.Data;
 
+// Solo el administrador maneja el catálogo de categorías.
+[Authorize(Roles = "Administrador")]
 public class CategoriasController : Controller
 {
     private readonly ApplicationDbContext _context;

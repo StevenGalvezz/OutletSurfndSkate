@@ -1,8 +1,35 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="portada">
+    <h1>Outlet Surf&amp;Skate</h1>
+
+    @if (User.IsInRole("Administrador"))
+    {
+        <p>Panel de administración: catálogo, clientes y pedidos de la tienda.</p>
+        <div class="portada-accesos">
+            <a class="btn btn-primary" asp-controller="Pedidos" asp-action="Create">Armar un pedido</a>
+            <a class="btn btn-outline-secondary" asp-controller="Pedidos" asp-action="Index">Ver pedidos</a>
+            <a class="btn btn-outline-secondary" asp-controller="Clientes" asp-action="Index">Clientes</a>
+            <a class="btn btn-outline-secondary" asp-controller="Productos" asp-action="Index">Productos</a>
+        </div>
+    }
+    else if (User.IsInRole("Cliente"))
+    {
+        <p>Ropa y accesorios de outlet, directo a su carrito.</p>
+        <div class="portada-accesos">
+            <a class="btn btn-primary" asp-controller="Tienda" asp-action="Index">Ir a la tienda</a>
+            <a class="btn btn-outline-secondary" asp-controller="Carrito" asp-action="Index">Mi carrito</a>
+            <a class="btn btn-outline-secondary" asp-controller="Pedidos" asp-action="Index">Mis pedidos</a>
+        </div>
+    }
+    else
+    {
+        <p>Ropa y accesorios de outlet. Cree su cuenta para empezar a comprar.</p>
+        <div class="portada-accesos">
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Crear cuenta</a>
+            <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Login">Iniciar sesión</a>
+        </div>
+    }
 </div>

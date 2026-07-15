@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Pedidos360.Tests/Pedidos360.Tests.csproj" />
   <Project Path="Pedidos360/Pedidos360.csproj" />
 </Solution>

@@ -1,5 +1,7 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Pedidos360.Services
+@inject ICarritoService CarritoService
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,12 +10,21 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Pedidos360.styles.css" asp-append-version="true" />
+    <script>
+        // se aplica el tema guardado antes de pintar la página, para que no haya parpadeo
+        (function () {
+            var guardado = localStorage.getItem("tema");
+            if (guardado) {
+                document.documentElement.setAttribute("data-theme", guardado);
+            }
+        })();
+    </script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Outlet Surf&Skate</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Outlet Surf&amp;Skate</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,21 +32,44 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Productos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Pedidos" asp-action="Index">Pedidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Productos" asp-action="Index">Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Categorias" asp-action="Index">Categorías</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Cliente"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Tienda" asp-action="Index">Tienda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Carrito" asp-action="Index">
+                                    Carrito
+                                    @{ var cantidadCarrito = CarritoService.ObtenerItems().Sum(i => i.Cantidad); }
+                                    @if (cantidadCarrito > 0)
+                                    {
+                                        <span class="carrito-badge">@cantidadCarrito</span>
+                                    }
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Pedidos" asp-action="Index">Mis pedidos</a>
+                            </li>
+                        }
                     </ul>
+                    <button id="theme-toggle" type="button">Modo oscuro</button>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -49,7 +83,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - Pedidos360 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - Pedidos360 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

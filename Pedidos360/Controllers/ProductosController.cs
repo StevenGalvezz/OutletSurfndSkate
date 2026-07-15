@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Data;
 using Pedidos360.Models;
 
+// El catálogo administrativo (con precios de costo, stock, etc.) es
+// solo para el administrador; el cliente compra desde la Tienda.
+[Authorize(Roles = "Administrador")]
 public class ProductosController : Controller
 {
     private readonly ApplicationDbContext _context;

@@ -1,0 +1,4 @@
+@model (string Url, string Nombre)
+
+<img src="@Model.Url" alt="@Model.Nombre" class="imagen-producto"
+     onerror="this.onerror=null;this.src='/images/sin-imagen.svg';" />

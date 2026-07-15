@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Pedidos360.Services;
 
 namespace Pedidos360
 {
@@ -17,9 +17,31 @@ namespace Pedidos360
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            // Sin RequireConfirmedAccount: el proyecto no tiene un correo real
+            // configurado, así que un cliente que se registra puede entrar
+            // de una vez en lugar de quedar esperando un correo que nunca llega.
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            // Reglas de negocio del pedido, separadas de los controladores.
+            // Si algún día cambia la fórmula de impuestos o la forma de buscar
+            // productos, se reemplaza la implementación aquí sin tocar el resto.
+            builder.Services.AddScoped<ICalculadoraPedido, CalculadoraPedido>();
+            builder.Services.AddScoped<IProductoBusquedaService, ProductoBusquedaService>();
+            builder.Services.AddScoped<IPedidoService, PedidoService>();
+
+            // El carrito de compras vive en la sesión del navegador.
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(2);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            builder.Services.AddScoped<ICarritoService, CarritoService>();
 
             // 1. Configuración de la Cultura es-CR personalizada para Costa Rica (Coma para miles, punto para decimales)
             var defaultCulture = new System.Globalization.CultureInfo("es-CR");
@@ -66,6 +88,8 @@ namespace Pedidos360
 
             // 2. Activación del Middleware de localización justo después de UseRouting
             app.UseRequestLocalization(localizationOptions);
+
+            app.UseSession();
 
             app.UseAuthorization();
 

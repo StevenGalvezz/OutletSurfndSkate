@@ -271,8 +271,12 @@ namespace Pedidos360.Data.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Telefono")
+                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

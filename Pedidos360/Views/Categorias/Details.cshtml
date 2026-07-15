@@ -1,31 +1,22 @@
 @model Pedidos360.Models.Categoria
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle de categoría";
 }
 
-<h1>Details</h1>
+<h1>Detalle de categoría</h1>
 
-<div>
-    <h4>Categoria</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Productos)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Productos)
-        </dd>
+<div class="card p-3" style="max-width: 480px;">
+    <dl class="row mb-0">
+        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Nombre)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+
+        <dt class="col-sm-4">Productos en esta categoría</dt>
+        <dd class="col-sm-8">@Model.Productos.Count</dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="mt-3 acciones-fila">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Volver a la lista</a>
 </div>

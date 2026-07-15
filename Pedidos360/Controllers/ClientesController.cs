@@ -1,9 +1,14 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Models;
 using Pedidos360.Data;
 
+// La ficha del cliente ahora se crea sola cuando alguien se registra
+// (rol Cliente); este panel es para que el administrador gestione
+// esas fichas y las de los clientes de negocio que no tienen login.
+[Authorize(Roles = "Administrador")]
 public class ClientesController : Controller
 {
     private readonly ApplicationDbContext _context;

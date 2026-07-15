@@ -1,0 +1,41 @@
+@model IEnumerable<Pedidos360.Models.Producto>
+
+@{
+    ViewData["Title"] = "Tienda";
+    var cultura = System.Globalization.CultureInfo.CurrentCulture;
+}
+
+<h1>Tienda</h1>
+
+@if (TempData["ErrorCarrito"] != null)
+{
+    <p class="text-danger">@TempData["ErrorCarrito"]</p>
+}
+
+@if (!Model.Any())
+{
+    <p>No hay productos disponibles por ahora.</p>
+}
+else
+{
+    <div class="grid-productos">
+        @foreach (var producto in Model)
+        {
+            <div class="tarjeta-producto">
+                <partial name="_ImagenProducto" model="(producto.ImagenUrl, producto.Nombre)" />
+                <div class="cuerpo">
+                    <strong>@producto.Nombre</strong>
+                    <span class="text-muted">@producto.Categoria?.Nombre</span>
+                    <span class="precio">@producto.Precio.ToString("C", cultura)</span>
+                    <span>Disponibles: @producto.Stock</span>
+
+                    <form asp-controller="Carrito" asp-action="Agregar" method="post" class="d-flex gap-2 mt-2">
+                        <input type="hidden" name="productoId" value="@producto.Id" />
+                        <input type="number" name="cantidad" value="1" min="1" max="@producto.Stock" class="form-control" style="width: 80px;" />
+                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}

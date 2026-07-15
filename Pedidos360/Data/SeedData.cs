@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Pedidos360.Models;
 
 namespace Pedidos360.Data
@@ -10,8 +11,8 @@ namespace Pedidos360.Data
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                // Asegura que la base de datos exista
-                context.Database.EnsureCreated();
+                // Aplica las migraciones pendientes (crea la base si no existe)
+                context.Database.Migrate();
 
                 // 1. SEED DE CATEGORÍAS (Si no hay ninguna, las crea)
                 if (!context.Categorias.Any())
@@ -37,6 +38,8 @@ namespace Pedidos360.Data
                 }
 
                 // 3. SEED DE CLIENTES (Si la tabla está vacía, los mete)
+                // Estos son cuentas de negocio que carga el administrador a mano,
+                // por eso no tienen UsuarioId: no inician sesión, solo se facturan.
                 if (!context.Clientes.Any())
                 {
                     context.Clientes.AddRange(
@@ -47,6 +50,69 @@ namespace Pedidos360.Data
                 }
 
                 context.SaveChanges(); // Guarda todos los productos y clientes finales
+            }
+
+            // 4. SEED DE ROLES Y USUARIOS DE PRUEBA (Administrador y Cliente)
+            SeedRolesYUsuarios(serviceProvider);
+        }
+
+        private static void SeedRolesYUsuarios(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            foreach (var rol in new[] { "Administrador", "Cliente" })
+            {
+                if (!roleManager.RoleExistsAsync(rol).GetAwaiter().GetResult())
+                {
+                    roleManager.CreateAsync(new IdentityRole(rol)).GetAwaiter().GetResult();
+                }
+            }
+
+            CrearUsuarioDemo(serviceProvider, userManager, "admin@outletsurfskate.com", "Admin#2026", "Administrador");
+            CrearUsuarioDemo(serviceProvider, userManager, "cliente@outletsurfskate.com", "Cliente#2026", "Cliente");
+        }
+
+        private static void CrearUsuarioDemo(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager, string correo, string clave, string rol)
+        {
+            var usuario = userManager.FindByEmailAsync(correo).GetAwaiter().GetResult();
+            if (usuario != null)
+            {
+                return;
+            }
+
+            usuario = new IdentityUser
+            {
+                UserName = correo,
+                Email = correo,
+                EmailConfirmed = true // usuario de prueba: se salta la confirmación por correo
+            };
+
+            var resultado = userManager.CreateAsync(usuario, clave).GetAwaiter().GetResult();
+            if (!resultado.Succeeded)
+            {
+                return;
+            }
+
+            userManager.AddToRoleAsync(usuario, rol).GetAwaiter().GetResult();
+
+            // Al usuario Cliente de prueba se le crea su ficha, tal como haría
+            // el registro real, para que ya tenga con qué comprar.
+            if (rol == "Cliente")
+            {
+                using var context = new ApplicationDbContext(
+                    serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+
+                context.Clientes.Add(new Cliente
+                {
+                    Nombre = "Cliente de Prueba",
+                    Cedula = "1-0000-0000",
+                    Correo = correo,
+                    Telefono = "8000-0000",
+                    Direccion = "San José, Costa Rica",
+                    UsuarioId = usuario.Id
+                });
+                context.SaveChanges();
             }
         }
     }

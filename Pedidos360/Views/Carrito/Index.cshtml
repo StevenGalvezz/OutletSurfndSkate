@@ -1,0 +1,62 @@
+@model Pedidos360.Models.CarritoViewModel
+
+@{
+    ViewData["Title"] = "Mi carrito";
+    var cultura = System.Globalization.CultureInfo.CurrentCulture;
+}
+
+<h1>Mi carrito</h1>
+
+@if (TempData["ErrorCarrito"] != null)
+{
+    <p class="text-danger">@TempData["ErrorCarrito"]</p>
+}
+
+@if (Model.Lineas.Count == 0)
+{
+    <p>Su carrito está vacío. <a asp-controller="Tienda" asp-action="Index">Ir a la tienda</a></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            @foreach (var linea in Model.Lineas)
+            {
+                <div class="carrito-linea">
+                    <partial name="_ImagenProducto" model="(linea.Producto.ImagenUrl, linea.Producto.Nombre)" />
+                    <div class="info">
+                        <strong>@linea.Producto.Nombre</strong><br />
+                        <span class="text-muted">@linea.Producto.Precio.ToString("C", cultura) c/u</span>
+                    </div>
+
+                    <form asp-controller="Carrito" asp-action="Actualizar" method="post" class="d-flex gap-2 align-items-center">
+                        <input type="hidden" name="productoId" value="@linea.Producto.Id" />
+                        <input type="number" name="cantidad" value="@linea.Cantidad" min="1" max="@linea.Producto.Stock" class="form-control" style="width: 80px;" />
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Actualizar</button>
+                    </form>
+
+                    <strong style="min-width: 110px; text-align: right;">@linea.TotalLinea.ToString("C", cultura)</strong>
+
+                    <form asp-controller="Carrito" asp-action="Quitar" method="post">
+                        <input type="hidden" name="productoId" value="@linea.Producto.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+                    </form>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 resumen-totales">
+                <h4 class="mb-3">Resumen</h4>
+                <div class="fila"><span>Subtotal</span><span>@Model.Subtotal.ToString("C", cultura)</span></div>
+                <div class="fila"><span>Impuestos</span><span>@Model.Impuestos.ToString("C", cultura)</span></div>
+                <div class="fila total"><span>Total</span><span>@Model.Total.ToString("C", cultura)</span></div>
+
+                <form asp-controller="Carrito" asp-action="Confirmar" method="post">
+                    <button type="submit" class="btn btn-primary mt-3 w-100">Confirmar pedido</button>
+                </form>
+                <a asp-controller="Tienda" asp-action="Index" class="btn btn-outline-secondary mt-2 w-100">Seguir comprando</a>
+            </div>
+        </div>
+    </div>
+}

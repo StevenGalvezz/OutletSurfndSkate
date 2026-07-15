@@ -1,0 +1,63 @@
+@model Pedidos360.Models.PedidoCreateViewModel
+
+@{
+    ViewData["Title"] = "Nuevo pedido";
+}
+
+<h1>Nuevo pedido</h1>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-action="Create" id="form-pedido">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="mb-3">
+                <label asp-for="ClienteId" class="control-label">Cliente</label>
+                <select asp-for="ClienteId" class="form-select" asp-items="ViewBag.ClienteId">
+                    <option value="">-- Seleccione un cliente --</option>
+                </select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 buscador-producto">
+                <label class="control-label">Buscar producto</label>
+                <input type="text" id="buscador" class="form-control" placeholder="Escriba el nombre del producto..." autocomplete="off" />
+                <div id="resultados-busqueda" class="resultados-busqueda d-none"></div>
+            </div>
+
+            <table class="table" id="tabla-lineas">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio unit.</th>
+                        <th>Cantidad</th>
+                        <th>Descuento</th>
+                        <th>Subtotal línea</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="lineas-body">
+                    <tr id="fila-vacia">
+                        <td colspan="6">Todavía no ha agregado productos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card p-3 resumen-totales">
+                <h4 class="mb-3">Resumen</h4>
+                <div class="fila"><span>Subtotal</span><span id="txt-subtotal">₡0.00</span></div>
+                <div class="fila"><span>Impuestos</span><span id="txt-impuestos">₡0.00</span></div>
+                <div class="fila total"><span>Total</span><span id="txt-total">₡0.00</span></div>
+                <button type="submit" class="btn btn-primary mt-3">Guardar pedido</button>
+                <a asp-action="Index" class="btn btn-outline-secondary mt-2">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/pedidos.js" asp-append-version="true"></script>
+}

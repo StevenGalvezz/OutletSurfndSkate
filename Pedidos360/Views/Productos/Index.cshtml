@@ -1,71 +1,43 @@
 @model IEnumerable<Pedidos360.Models.Producto>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Productos";
 }
 
 <h1>Productos</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Crear nuevo producto</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo producto</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImpuestoPorc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagenUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th>Acciones</th>
+            <th>Foto</th>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>Categoría</th>
+            <th>@Html.DisplayNameFor(model => model.Precio)</th>
+            <th>@Html.DisplayNameFor(model => model.ImpuestoPorc)</th>
+            <th>@Html.DisplayNameFor(model => model.Stock)</th>
+            <th>@Html.DisplayNameFor(model => model.Activo)</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Categoria.Nombre)
-                </td>
-                <td>
-                    @item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImpuestoPorc)%
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Stock)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImagenUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Activo)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <td style="width: 72px;"><partial name="_ImagenProducto" model="(item.ImagenUrl, item.Nombre)" /></td>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@item.Categoria?.Nombre</td>
+                <td>@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
+                <td>@item.ImpuestoPorc %</td>
+                <td>@item.Stock</td>
+                <td>@(item.Activo ? "Sí" : "No")</td>
+                <td class="acciones-fila">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
                 </td>
             </tr>
         }

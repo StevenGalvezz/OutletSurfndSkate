@@ -1,41 +1,35 @@
 @model IEnumerable<Pedidos360.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categorías";
 }
 
-<h1>Index</h1>
+<h1>Categorías</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nueva categoría</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Productos)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>Productos</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Productos)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@item.Productos.Count</td>
+                <td class="acciones-fila">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
