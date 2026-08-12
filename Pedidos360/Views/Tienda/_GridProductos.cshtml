@@ -1,0 +1,41 @@
+@model IEnumerable<Pedidos360.Models.Producto>
+@{
+    var cultura = System.Globalization.CultureInfo.CurrentCulture;
+}
+
+@if (!Model.Any())
+{
+    <p class="sin-resultados-tienda">No encontramos productos que coincidan con la búsqueda.</p>
+}
+else
+{
+    <div class="grid-productos">
+        @foreach (var producto in Model)
+        {
+            <div class="tarjeta-producto">
+                <partial name="_ImagenProducto" model="(producto.ImagenUrl, producto.Nombre)" />
+                <div class="cuerpo">
+                    @if (producto.Categoria != null)
+                    {
+                        <span class="etiqueta-categoria">@producto.Categoria.Nombre</span>
+                    }
+                    <strong title="@producto.Nombre">@producto.Nombre</strong>
+                    <div class="precio-y-stock">
+                        <span class="precio">@producto.Precio.ToString("C", cultura)</span>
+                        <span class="stock-disponible">Quedan @producto.Stock</span>
+                    </div>
+
+                    <form asp-controller="Carrito" asp-action="Agregar" method="post" class="form-agregar">
+                        <input type="hidden" name="productoId" value="@producto.Id" />
+                        <div class="cantidad-control">
+                            <button type="button" class="btn-stepper" data-paso="-1" data-target="cant-agregar-@producto.Id" aria-label="Quitar una unidad">&minus;</button>
+                            <input type="number" id="cant-agregar-@producto.Id" name="cantidad" value="1" min="1" max="@producto.Stock" />
+                            <button type="button" class="btn-stepper" data-paso="1" data-target="cant-agregar-@producto.Id" aria-label="Agregar una unidad">+</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Agregar al carrito</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}

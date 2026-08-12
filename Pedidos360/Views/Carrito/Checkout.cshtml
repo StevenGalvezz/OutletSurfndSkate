@@ -1,0 +1,142 @@
+@model Pedidos360.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+    var cultura = System.Globalization.CultureInfo.CurrentCulture;
+}
+
+<h1>Checkout</h1>
+
+<div class="row checkout-layout">
+    <div class="col-lg-7">
+        <div class="card p-4 panel-entrega">
+            <h4 class="mb-1">Datos de entrega</h4>
+            <p class="lead-entrega">Confirme o corrija los datos con los que se va a facturar y entregar este pedido.</p>
+
+            <form asp-controller="Carrito" asp-action="Confirmar" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Entrega.Nombre" class="control-label">Nombre completo</label>
+                    <input asp-for="Entrega.Nombre" class="form-control" />
+                    <span asp-validation-for="Entrega.Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Entrega.Correo" class="control-label">Correo electrónico</label>
+                            <input asp-for="Entrega.Correo" type="email" class="form-control" />
+                            <span asp-validation-for="Entrega.Correo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Entrega.Telefono" class="control-label">Teléfono</label>
+                            <input asp-for="Entrega.Telefono" class="form-control" placeholder="8888-9999" />
+                            <span asp-validation-for="Entrega.Telefono" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Entrega.Direccion" class="control-label">Dirección de entrega</label>
+                    <textarea asp-for="Entrega.Direccion" class="form-control" rows="3" placeholder="Provincia, cantón, distrito, señas exactas"></textarea>
+                    <span asp-validation-for="Entrega.Direccion" class="text-danger"></span>
+                </div>
+
+                <hr class="mb-4" />
+
+                <h4 class="mb-3">Datos de pago</h4>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Pago.NombreTitular" class="control-label">Nombre en la tarjeta</label>
+                    <input asp-for="Pago.NombreTitular" class="form-control" autocomplete="cc-name" />
+                    <span asp-validation-for="Pago.NombreTitular" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Pago.NumeroTarjeta" class="control-label">Número de tarjeta</label>
+                    <input asp-for="Pago.NumeroTarjeta" id="numeroTarjeta" class="form-control" placeholder="4242 4242 4242 4242" inputmode="numeric" autocomplete="cc-number" maxlength="19" />
+                    <span asp-validation-for="Pago.NumeroTarjeta" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Pago.Vencimiento" class="control-label">Vencimiento</label>
+                            <input asp-for="Pago.Vencimiento" id="vencimientoTarjeta" class="form-control" placeholder="MM/AA" inputmode="numeric" autocomplete="cc-exp" maxlength="5" />
+                            <span asp-validation-for="Pago.Vencimiento" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Pago.Cvv" class="control-label">CVV</label>
+                            <input asp-for="Pago.Cvv" id="cvvTarjeta" class="form-control" placeholder="123" inputmode="numeric" autocomplete="cc-csc" maxlength="4" />
+                            <span asp-validation-for="Pago.Cvv" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Pagar y confirmar pedido</button>
+                <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-secondary">Volver al carrito</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card p-3 bolsa-resumen">
+            <div class="bolsa-encabezado">
+                <h4 class="mb-0">En su bolsa</h4>
+                <a asp-controller="Carrito" asp-action="Index">Editar</a>
+            </div>
+
+            @foreach (var linea in Model.Carrito.Lineas)
+            {
+                <div class="bolsa-linea">
+                    <div class="miniatura">
+                        <partial name="_ImagenProducto" model="(linea.Producto.ImagenUrl, linea.Producto.Nombre)" />
+                    </div>
+                    <div class="info">
+                        <strong>@linea.Producto.Nombre</strong>
+                        <span class="text-muted">Cant: @linea.Cantidad</span>
+                    </div>
+                    <div class="precio">@linea.TotalLinea.ToString("C", cultura)</div>
+                </div>
+            }
+
+            <div class="resumen-totales mt-3">
+                <div class="fila"><span>Subtotal</span><span>@Model.Carrito.Subtotal.ToString("C", cultura)</span></div>
+                <div class="fila"><span>Impuestos</span><span>@Model.Carrito.Impuestos.ToString("C", cultura)</span></div>
+                <div class="fila total"><span>Total</span><span>@Model.Carrito.Total.ToString("C", cultura)</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Solo formato visual (espacios cada 4 dígitos, "/" en el vencimiento,
+        // solo números en CVV). La validación real es del lado del servidor.
+        (function () {
+            const numero = document.getElementById('numeroTarjeta');
+            const vencimiento = document.getElementById('vencimientoTarjeta');
+            const cvv = document.getElementById('cvvTarjeta');
+
+            numero?.addEventListener('input', function () {
+                const digitos = this.value.replace(/\D/g, '').slice(0, 19);
+                this.value = digitos.replace(/(.{4})/g, '$1 ').trim();
+            });
+
+            vencimiento?.addEventListener('input', function () {
+                const digitos = this.value.replace(/\D/g, '').slice(0, 4);
+                this.value = digitos.length > 2 ? digitos.slice(0, 2) + '/' + digitos.slice(2) : digitos;
+            });
+
+            cvv?.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 4);
+            });
+        })();
+    </script>
+}

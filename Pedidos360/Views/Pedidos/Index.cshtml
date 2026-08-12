@@ -16,31 +16,42 @@
 }
 else
 {
-    <table class="table">
+    <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
                 <th>N°</th>
                 <th>Cliente</th>
                 <th>Fecha</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th></th>
+                <th class="text-end">Total</th>
+                <th class="text-center">Estado</th>
+                <th class="text-end"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                var estadoBadge = item.Estado switch
+                {
+                    "Pendiente" => "text-bg-warning",
+                    "Procesando" => "text-bg-info",
+                    "Enviado" => "text-bg-primary",
+                    "Entregado" => "text-bg-success",
+                    "Cancelado" => "text-bg-danger",
+                    _ => "text-bg-secondary",
+                };
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Cliente?.Nombre</td>
                     <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@item.Total.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
-                    <td>@item.Estado</td>
-                    <td class="acciones-fila">
+                    <td class="text-end">@item.Total.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
+                    <td class="text-center"><span class="badge @estadoBadge">@item.Estado</span></td>
+                    <td class="acciones-fila text-end">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Ver</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    </div>
 }

@@ -7,6 +7,11 @@
 
 <h1>Pedido #@Model.Id</h1>
 
+@if (TempData["MensajePago"] != null)
+{
+    <p class="@(TempData["MensajePagoError"] != null ? "text-danger" : "text-success")">@TempData["MensajePago"]</p>
+}
+
 <div class="card p-3 mb-3">
     <dl class="row mb-0">
         <dt class="col-sm-2">Cliente</dt>

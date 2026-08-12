@@ -32,6 +32,11 @@ namespace Pedidos360
             builder.Services.AddScoped<IProductoBusquedaService, ProductoBusquedaService>();
             builder.Services.AddScoped<IPedidoService, PedidoService>();
 
+            // Envío de correo real por SMTP (factura del checkout y, de paso,
+            // los correos de cuenta de Identity que antes no hacían nada).
+            builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, SmtpEmailSender>();
+            builder.Services.AddScoped<IFacturaEmailService, FacturaEmailService>();
+
             // El carrito de compras vive en la sesión del navegador.
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddDistributedMemoryCache();
