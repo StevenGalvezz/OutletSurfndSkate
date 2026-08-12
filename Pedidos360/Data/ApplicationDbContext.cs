@@ -23,42 +23,45 @@ namespace Pedidos360.Data
             // Mantiene la configuración interna de ASP.NET Core Identity (Roles y Usuarios)
             base.OnModelCreating(modelBuilder);
 
-            // Configuraciones de precisión para campos Decimales (Evita truncados en BD)
+            // Configuraciones de precisión para campos Decimales (Evita truncados en BD).
+            // HasPrecision en vez de HasColumnType("decimal(...)") porque este último es
+            // sintaxis propia de SQL Server; HasPrecision la traduce cada proveedor a su
+            // propio tipo (así el modelo sirve igual para SqlServer que para Sqlite).
             modelBuilder.Entity<Producto>()
                 .Property(p => p.Precio)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<Producto>()
                 .Property(p => p.ImpuestoPorc)
-                .HasColumnType("decimal(5,2)");
+                .HasPrecision(5, 2);
 
             modelBuilder.Entity<Pedido>()
                 .Property(p => p.Subtotal)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<Pedido>()
                 .Property(p => p.Impuestos)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<Pedido>()
                 .Property(p => p.Total)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<PedidoDetalle>()
                 .Property(pd => pd.PrecioUnit)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<PedidoDetalle>()
                 .Property(pd => pd.Descuento)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<PedidoDetalle>()
                 .Property(pd => pd.ImpuestoPorc)
-                .HasColumnType("decimal(5,2)");
+                .HasPrecision(5, 2);
 
             modelBuilder.Entity<PedidoDetalle>()
                 .Property(pd => pd.TotalLinea)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
         }
     }
 }

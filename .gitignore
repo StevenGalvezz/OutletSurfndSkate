@@ -112,6 +112,14 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
+# Base de datos SQLite local/runtime (se genera con las migraciones al levantar la app)
+Pedidos360/App_Data/*.db
+Pedidos360/App_Data/*.db-shm
+Pedidos360/App_Data/*.db-wal
+
+# Secretos de deploy (credenciales SMTP reales) - ver .env.example
+.env
+
 # Visual Studio profiler
 *.psess
 *.vsp
