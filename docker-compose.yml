@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pedidos360
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Data Source=/app/App_Data/pedidos360.db"
+      # Credenciales SMTP: no van hardcodeadas acá, salen del .env (ver .env.example)
+      Smtp__User: ${SMTP_USER}
+      Smtp__Password: ${SMTP_PASSWORD}
+    volumes:
+      # Named volume para que la base SQLite sobreviva a un rebuild del contenedor.
+      - pedidos360_data:/app/App_Data
+    ports:
+      # Nginx en el host le pega a este puerto (reverse proxy). No expuesto
+      # directo a internet más que a través de él.
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  pedidos360_data:

@@ -21,15 +21,12 @@ namespace Pedidos360.Models
         public DateTime Fecha { get; set; } = DateTime.Now;
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Subtotal { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Impuestos { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Total { get; set; }
 
         [Required]

@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/App_Data/*.db
+**/App_Data/*.db-shm
+**/App_Data/*.db-wal
+Pedidos360.Tests/
+.git/
+.gitignore
+.env
+*.md

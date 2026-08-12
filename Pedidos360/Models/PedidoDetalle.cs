@@ -26,19 +26,15 @@ namespace Pedidos360.Models
         public int Cantidad { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal PrecioUnit { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Descuento { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(5,2)")]
         public decimal ImpuestoPorc { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal TotalLinea { get; set; }
     }
 }

@@ -20,12 +20,10 @@ namespace Pedidos360.Models
 
         [Required(ErrorMessage = "El precio es requerido.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0.")]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "El porcentaje de impuesto es requerido.")]
         [Range(0, 100, ErrorMessage = "El impuesto debe estar entre 0 y 100 %.")]
-        [Column(TypeName = "decimal(5,2)")]
         public decimal ImpuestoPorc { get; set; }
 
         [Required(ErrorMessage = "El stock es requerido.")]
