@@ -1,7 +1,7 @@
 @{
+
     ViewData["Title"] = "Inicio";
 }
-
 <div class="portada">
     <h1>Outlet Surf&amp;Skate</h1>
 
@@ -13,6 +13,7 @@
             <a class="btn btn-outline-secondary" asp-controller="Pedidos" asp-action="Index">Ver pedidos</a>
             <a class="btn btn-outline-secondary" asp-controller="Clientes" asp-action="Index">Clientes</a>
             <a class="btn btn-outline-secondary" asp-controller="Productos" asp-action="Index">Productos</a>
+
         </div>
         <p class="mt-3">
             <a asp-controller="Errores" asp-action="Probar500" class="btn btn-sm btn-outline-secondary">Probar página de error 500</a>
@@ -29,10 +30,11 @@
     }
     else
     {
-        <p>Ropa y accesorios de outlet. Cree su cuenta para empezar a comprar.</p>
+        <p>Ropa y accesorios de outlet.</p>
         <div class="portada-accesos">
             <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Crear cuenta</a>
             <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Login">Iniciar sesión</a>
         </div>
     }
 </div>
+

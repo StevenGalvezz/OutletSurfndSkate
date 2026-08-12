@@ -8,7 +8,6 @@ using Pedidos360.Services;
 
 namespace Pedidos360.Controllers
 {
-    [Authorize(Roles = "Cliente")]
     public class CarritoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,6 +30,8 @@ namespace Pedidos360.Controllers
             _facturaEmailService = facturaEmailService;
         }
 
+        //El visitante puede ver su carrito en cualquier momento
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await ConstruirCarritoViewModelAsync());
@@ -81,6 +82,7 @@ namespace Pedidos360.Controllers
         }
 
         // GET: CARRITO/Checkout — datos de entrega + resumen de la bolsa, antes de confirmar.
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Checkout()
         {

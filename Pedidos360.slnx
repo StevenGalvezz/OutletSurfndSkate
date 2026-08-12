@@ -1,4 +1,6 @@
 <Solution>
-  <Project Path="Pedidos360.Tests/Pedidos360.Tests.csproj" />
+  <Project Path="Pedidos360.Tests/Pedidos360.Tests.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="Pedidos360/Pedidos360.csproj" />
 </Solution>

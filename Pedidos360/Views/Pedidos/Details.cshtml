@@ -7,21 +7,71 @@
 
 <h1>Pedido #@Model.Id</h1>
 
+@if (TempData["Mensaje"] != null)
+{
+    var (fondoAlerta, textoAlerta) = Model.Estado switch
+    {
+        "Pendiente" => ("#ffc107", "#000000"),
+        "Procesando" => ("#0dcaf0", "#000000"),
+        "Enviado" => ("#FF380D", "#ffffff"),
+        "Entregado" => ("#198754", "#ffffff"),
+        "Cancelado" => ("#dc3545", "#ffffff"),
+        _ => ("#6c757d", "#ffffff")
+    };
+
+    var closeBtnClass = textoAlerta == "#ffffff" ? "btn-close-white" : "";
+
+    <div class="alert alert-dismissible fade show mb-3 rounded-0 fw-bold"
+         style="background-color: @fondoAlerta; color: @textoAlerta; border: 2px solid #000000; box-shadow: 3px 3px 0px #000000;"
+         role="alert">
+        <span>@TempData["Mensaje"]</span>
+        <button type="button" class="btn-close @closeBtnClass" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 @if (TempData["MensajePago"] != null)
 {
     <p class="@(TempData["MensajePagoError"] != null ? "text-danger" : "text-success")">@TempData["MensajePago"]</p>
 }
 
 <div class="card p-3 mb-3">
-    <dl class="row mb-0">
+    <dl class="row mb-0 align-items-center">
         <dt class="col-sm-2">Cliente</dt>
-        <dd class="col-sm-10">@Model.Cliente?.Nombre (@Model.Cliente?.Cedula)</dd>
+        <dd class="col-sm-10 mb-2">@Model.Cliente?.Nombre (@Model.Cliente?.Cedula)</dd>
 
         <dt class="col-sm-2">Fecha</dt>
-        <dd class="col-sm-10">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dd class="col-sm-10 mb-2">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
 
         <dt class="col-sm-2">Estado</dt>
-        <dd class="col-sm-10">@Model.Estado</dd>
+        <dd class="col-sm-10 mb-0">
+            @if (User.IsInRole("Administrador"))
+            {
+                <form asp-action="CambiarEstado" method="post" class="d-inline-flex align-items-center gap-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <select name="nuevoEstado" class="form-select form-select-sm d-inline-block w-auto">
+                        <option value="Pendiente" selected="@(Model.Estado == "Pendiente")">Pendiente</option>
+                        <option value="Procesando" selected="@(Model.Estado == "Procesando")">Procesando</option>
+                        <option value="Enviado" selected="@(Model.Estado == "Enviado")">Enviado</option>
+                        <option value="Entregado" selected="@(Model.Estado == "Entregado")">Entregado</option>
+                        <option value="Cancelado" selected="@(Model.Estado == "Cancelado")">Cancelado</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-orange text-uppercase fw-bold">Actualizar</button>
+                </form>
+            }
+            else
+            {
+                var estadoBadge = Model.Estado switch
+                {
+                    "Pendiente" => "text-bg-warning",
+                    "Procesando" => "text-bg-info",
+                    "Enviado" => "text-bg-primary",
+                    "Entregado" => "text-bg-success",
+                    "Cancelado" => "text-bg-danger",
+                    _ => "text-bg-secondary",
+                };
+                <span class="badge @estadoBadge">@Model.Estado</span>
+            }
+        </dd>
     </dl>
 </div>
 

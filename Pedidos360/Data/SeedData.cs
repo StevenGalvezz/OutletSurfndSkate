@@ -18,22 +18,22 @@ namespace Pedidos360.Data
                 if (!context.Categorias.Any())
                 {
                     context.Categorias.AddRange(
-                        new Categoria { Nombre = "General" },
-                        new Categoria { Nombre = "Ropa Streetwear" }
+                        new Categoria { Nombre = "Camisetas" },
+                        new Categoria { Nombre = "Pantalones" }
                     );
                     context.SaveChanges(); // se guarda para generar los IDs en la BD
                 }
 
                 // Buscamos los IDs reales que la base de datos asignó para amarrar los productos
-                var catGeneral = context.Categorias.FirstOrDefault(c => c.Nombre == "General")?.Id ?? 1;
-                var catRopa = context.Categorias.FirstOrDefault(c => c.Nombre == "Ropa Streetwear")?.Id ?? 2;
+                var catCamisetas = context.Categorias.FirstOrDefault(c => c.Nombre == "Camisetas")?.Id ?? 1;
+                var catPantalones = context.Categorias.FirstOrDefault(c => c.Nombre == "Pantalones")?.Id ?? 2;
 
                 // 2. SEED DE PRODUCTOS (Si la tabla está vacía, mete los datos oficiales)
                 if (!context.Productos.Any())
                 {
                     context.Productos.AddRange(
-                        new Producto { Nombre = "Pantalon Baggy Cargo Southpole", CategoriaId = catRopa, Precio = 18000, ImpuestoPorc = 13, Stock = 20, ImagenUrl = "/images/cargo.jpg", Activo = true },
-                        new Producto { Nombre = "Camiseta Vintage Comfort Colors", CategoriaId = catRopa, Precio = 12000, ImpuestoPorc = 13, Stock = 40, ImagenUrl = "/images/tshirt.jpg", Activo = true }
+                        new Producto { Nombre = "Pantalon JNCO Kangaroo", CategoriaId = catPantalones, Precio = 27000, ImpuestoPorc = 13, Stock = 4, ImagenUrl = "https://i.pinimg.com/736x/99/51/47/995147af7dd2db28d2892b725b8232c3.jpg", Activo = true },
+                        new Producto { Nombre = "Camiseta Vintage DC", CategoriaId = catCamisetas, Precio = 12000, ImpuestoPorc = 13, Stock = 3, ImagenUrl = "https://i.pinimg.com/1200x/13/47/3b/13473bf45852178d747248dbfebb6a00.jpg", Activo = true }
                     );
                 }
 

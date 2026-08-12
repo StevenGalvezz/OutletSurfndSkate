@@ -5,22 +5,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Outlet Surf&Skate</title>
+    <title>@ViewData["Title"] - Outlet Surf&amp;Skate</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Pedidos360.styles.css" asp-append-version="true" />
     <script>
-        // se aplica el tema guardado antes de pintar la página, para que no haya parpadeo.
-        // data-bs-theme es el atributo propio de Bootstrap: sin este, sus componentes
-        // (badges, formularios, etc.) se quedan con el texto oscuro de siempre aunque
-        // el fondo de la página ya esté oscuro.
-        (function () {
-            var guardado = localStorage.getItem("tema");
-            var tema = guardado || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-            document.documentElement.setAttribute("data-theme", tema);
-            document.documentElement.setAttribute("data-bs-theme", tema);
-        })();
+            // Se aplica el tema guardado antes de pintar la página, para que no haya parpadeo.
+            (function() {
+                var guardado = localStorage.getItem("tema");
+                var tema = guardado || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                document.documentElement.setAttribute("data-theme", tema);
+                document.documentElement.setAttribute("data-bs-theme", tema);
+            })();
     </script>
 </head>
 <body>
@@ -35,21 +32,22 @@
                 </button>
 
                 <div class="navbar-herramientas">
-                    @if (User.IsInRole("Cliente"))
-                    {
-                        <a class="carrito-rapido" asp-area="" asp-controller="Carrito" asp-action="Index" aria-label="Carrito" title="Carrito">
-                            <svg class="icono-carrito" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
-                            @{ var cantidadCarrito = CarritoService.ObtenerItems().Sum(i => i.Cantidad); }
-                            @if (cantidadCarrito > 0)
-                            {
-                                <span class="carrito-badge">@cantidadCarrito</span>
-                            }
-                        </a>
-                    }
+                    <!-- 🛒 Carrito Rápido: Visible para TODOS (Anónimos, Clientes y Admin) -->
+                    <a class="carrito-rapido" asp-area="" asp-controller="Carrito" asp-action="Index" aria-label="Carrito" title="Carrito">
+                        <svg class="icono-carrito" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        @{
+                            var cantidadCarrito = CarritoService.ObtenerItems().Sum(i => i.Cantidad);
+                        }
+                        @if (cantidadCarrito > 0)
+                        {
+                            <span class="carrito-badge">@cantidadCarrito</span>
+                        }
+                    </a>
+
                     <div class="dropdown menu-cuenta">
                         <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             @(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Cuenta")
@@ -65,6 +63,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
+
+                        <!-- 🛒 Tienda pública: Visible para TODOS los usuarios -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Tienda" asp-action="Index">Tienda</a>
+                        </li>
+
                         @if (User.IsInRole("Administrador"))
                         {
                             <li class="nav-item">
@@ -82,9 +86,6 @@
                         }
                         else if (User.IsInRole("Cliente"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Tienda" asp-action="Index">Tienda</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Pedidos" asp-action="Index">Mis pedidos</a>
                             </li>

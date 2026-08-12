@@ -128,6 +128,26 @@ namespace Pedidos360.Controllers
             return RedirectToAction(nameof(Details), new { id = resultado.Pedido!.Id });
         }
 
+        // POST: Pedidos/CambiarEstado
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarEstado(int id, string nuevoEstado)
+        {
+            var pedido = await _context.Pedidos.FindAsync(id);
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+
+            pedido.Estado = nuevoEstado;
+            _context.Update(pedido);
+            await _context.SaveChangesAsync();
+
+            TempData["Mensaje"] = $"El estado del pedido #{id} se actualizó a {nuevoEstado}.";
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
         private async Task<int?> ObtenerClienteIdDelUsuarioAsync()
         {
             var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);

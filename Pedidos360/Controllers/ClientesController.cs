@@ -65,6 +65,7 @@ public class ClientesController : Controller
     }
 
     // GET: CLIENTES/Edit/5
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)

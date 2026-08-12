@@ -9,6 +9,7 @@ namespace Pedidos360.Models
 
         [Required(ErrorMessage = "El nombre del cliente es obligatorio.")]
         [StringLength(150, ErrorMessage = "El nombre no puede exceder los 150 caracteres.")]
+        [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El nombre del cliente solo debe contener letras, no números ni caracteres especiales.")]
         public string Nombre { get; set; } = null!;
 
         [Required(ErrorMessage = "La cédula física o jurídica es obligatoria.")]

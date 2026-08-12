@@ -7,8 +7,6 @@ using Pedidos360.Models;
 
 namespace Pedidos360.Controllers
 {
-    // Catálogo de compra para el cliente: solo lo que está activo y hay en existencia.
-    [Authorize(Roles = "Cliente")]
     public class TiendaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +16,8 @@ namespace Pedidos360.Controllers
             _context = context;
         }
 
+        // CÁTALOGO PÚBLICO: Cualquiera puede ver los productos
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string? termino, int? categoriaId)
         {
             ViewData["Termino"] = termino;
@@ -29,10 +29,42 @@ namespace Pedidos360.Controllers
         // GET: TIENDA/Buscar?termino=camiseta&categoriaId=2
         // Endpoint AJAX: devuelve solo la cuadrícula de productos ya renderizada,
         // para que la búsqueda funcione sin recargar la página.
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Buscar(string? termino, int? categoriaId)
         {
             return PartialView("_GridProductos", await BuscarProductosAsync(termino, categoriaId));
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producto = await _context.Productos
+                .Include(p => p.Categoria)
+                .FirstOrDefaultAsync(m => m.Id == id && m.Activo);
+
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            return View(producto);
+        }
+
+        // CÁTALOGO PÚBLICO / CARRITO TEMPORAL: 
+        // Permite agregar productos al carrito sin pedir inicio de sesión.
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult AgregarAlCarrito(int productoId, int cantidad = 1)
+        {
+            // Redirige la petición al CarritoController para guardarlo en la sesión del visitante
+            return RedirectToAction("Agregar", "Carrito", new { productoId = productoId, cantidad = cantidad });
         }
 
         private async Task<List<Producto>> BuscarProductosAsync(string? termino, int? categoriaId)
@@ -43,7 +75,8 @@ namespace Pedidos360.Controllers
 
             if (!string.IsNullOrWhiteSpace(termino))
             {
-                query = query.Where(p => p.Nombre.Contains(termino));
+                var terminoLimpio = termino.Trim().ToLower();
+                query = query.Where(p => p.Nombre.ToLower().Contains(terminoLimpio));
             }
 
             if (categoriaId.HasValue)
