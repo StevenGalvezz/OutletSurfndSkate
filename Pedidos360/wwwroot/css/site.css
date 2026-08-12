@@ -551,14 +551,39 @@ label {
    Tienda (catálogo del cliente)
    ========================================================== */
 .buscador-tienda {
-  max-width: 420px;
+  display: flex;
+  gap: 12px;
+  max-width: 640px;
   margin-bottom: 24px;
 }
 
 .buscador-tienda .form-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.buscador-tienda .form-control,
+.buscador-tienda .form-select {
   font-family: 'Oswald', sans-serif;
   font-size: 0.95rem;
   padding: 10px 14px;
+}
+
+.buscador-tienda .form-select {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 220px;
+}
+
+@media (max-width: 575px) {
+  .buscador-tienda {
+    flex-wrap: wrap;
+  }
+
+  .buscador-tienda .form-select {
+    flex: 1 1 100%;
+    max-width: none;
+  }
 }
 
 .sin-resultados-tienda {
