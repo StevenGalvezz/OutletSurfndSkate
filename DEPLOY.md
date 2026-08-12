@@ -70,12 +70,7 @@ sirviendo con la config vieja, no hay downtime por un error de sintaxis.
 Hay un proyecto viejo (`~/nails-finance/`, con su propio `docker-compose.yml`
 y volumen de Postgres) que quedó sin usar — no se tocó al hacer este deploy
 por decisión explícita, solo se le reasignó el vhost de Nginx a este proyecto.
-Si en algún momento se quiere limpiar del todo:
 
-```bash
-cd ~/nails-finance && sudo docker compose down -v   # -v borra el volumen de Postgres también
-rm -rf ~/nails-finance
-```
 
 ## Rollback rápido
 
