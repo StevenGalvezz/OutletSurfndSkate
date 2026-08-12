@@ -117,6 +117,12 @@ Pedidos360/App_Data/*.db
 Pedidos360/App_Data/*.db-shm
 Pedidos360/App_Data/*.db-wal
 
+# Claves de Data Protection (cifran cookies de sesión/login y tokens
+# antiforgery): se generan solas al primer arranque y NUNCA deben ir al
+# repo. En Oracle viven en el volumen Docker persistente (ver DEPLOY.md);
+# localmente se regeneran en App_Data/keys/ cada vez que hace falta.
+Pedidos360/App_Data/keys/
+
 # Secretos de deploy (credenciales SMTP reales) - ver .env.example
 .env
 
