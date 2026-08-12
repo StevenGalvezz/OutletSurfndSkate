@@ -26,13 +26,19 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3">
-            <div class="container-fluid">
-                <div class="marca-y-carrito">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Outlet Surf&amp;Skate</a>
+            <div class="container-fluid navbar-fila">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Outlet Surf&amp;Skate</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-herramientas">
                     @if (User.IsInRole("Cliente"))
                     {
                         <a class="carrito-rapido" asp-area="" asp-controller="Carrito" asp-action="Index" aria-label="Carrito" title="Carrito">
-                            <svg class="icono-carrito" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg class="icono-carrito" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <circle cx="9" cy="21" r="1"></circle>
                                 <circle cx="20" cy="21" r="1"></circle>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -44,13 +50,18 @@
                             }
                         </a>
                     }
+                    <div class="dropdown menu-cuenta">
+                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Cuenta")
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <partial name="_LoginPartial" />
+                        </ul>
+                    </div>
                 </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <ul class="navbar-nav navbar-enlaces">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
@@ -79,14 +90,6 @@
                             </li>
                         }
                     </ul>
-                    <div class="dropdown menu-cuenta">
-                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Cuenta")
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <partial name="_LoginPartial" />
-                        </ul>
-                    </div>
                 </div>
             </div>
         </nav>
