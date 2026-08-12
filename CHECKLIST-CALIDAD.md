@@ -13,7 +13,7 @@ Lista para repasar a mano antes de dar por lista la demo. Marcar cada punto prob
 
 ## Compra (Tienda + Carrito)
 
-- [ ] En la Tienda, cada producto muestra su foto (o el cuadro de "sin imagen" si la URL no carga).
+- [ ] En la Tienda, cada producto muestra su foto (o el cuadro de "sin imagen" si todavía no le subieron una).
 - [ ] Agregar un producto al carrito y ver que el contador del menú sube.
 - [ ] En el carrito, cambiar la cantidad de una línea y ver que el subtotal de esa línea y el resumen se actualizan.
 - [ ] Quitar una línea del carrito.
@@ -28,6 +28,7 @@ Lista para repasar a mano antes de dar por lista la demo. Marcar cada punto prob
 - [ ] El administrador puede armar un pedido manual desde `/Pedidos/Create` eligiendo cualquier cliente (por ejemplo, uno de los clientes de negocio que no tienen cuenta propia).
 - [ ] El administrador ve todos los pedidos en `/Pedidos`, no solo los suyos.
 - [ ] Crear/editar un producto sigue validando los campos numéricos y no acepta letras donde solo van números.
+- [ ] Al crear un producto, la foto es obligatoria y solo acepta JPG/PNG/WEBP/GIF (queda guardada en la base, no como URL). Al editar, se puede dejar el campo de foto en blanco para mantener la que ya tenía.
 
 ## Validaciones de formularios
 

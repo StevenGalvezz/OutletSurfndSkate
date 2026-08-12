@@ -95,7 +95,7 @@
             {
                 <div class="bolsa-linea">
                     <div class="miniatura">
-                        <partial name="_ImagenProducto" model="(linea.Producto.ImagenUrl, linea.Producto.Nombre)" />
+                        <partial name="_ImagenProducto" model='(Url.Action("Imagen", "Productos", new { id = linea.Producto.Id })!, linea.Producto.Nombre)' />
                     </div>
                     <div class="info">
                         <strong>@linea.Producto.Nombre</strong>

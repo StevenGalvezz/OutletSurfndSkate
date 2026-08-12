@@ -13,7 +13,7 @@ else
         @foreach (var producto in Model)
         {
             <div class="tarjeta-producto">
-                <partial name="_ImagenProducto" model="(producto.ImagenUrl, producto.Nombre)" />
+                <partial name="_ImagenProducto" model='(Url.Action("Imagen", "Productos", new { id = producto.Id })!, producto.Nombre)' />
                 <div class="cuerpo">
                     @if (producto.Categoria != null)
                     {

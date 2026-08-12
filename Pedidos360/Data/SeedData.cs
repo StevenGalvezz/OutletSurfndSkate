@@ -29,11 +29,14 @@ namespace Pedidos360.Data
                 var catPantalones = context.Categorias.FirstOrDefault(c => c.Nombre == "Pantalones")?.Id ?? 2;
 
                 // 2. SEED DE PRODUCTOS (Si la tabla está vacía, mete los datos oficiales)
+                // Sin foto: ahora se sube como archivo desde /Productos/Edit y queda
+                // guardada en la base (ver Producto.ImagenData); no hay una foto de
+                // ejemplo para "sembrar" sin depender de un archivo binario en git.
                 if (!context.Productos.Any())
                 {
                     context.Productos.AddRange(
-                        new Producto { Nombre = "Pantalon JNCO Kangaroo", CategoriaId = catPantalones, Precio = 27000, ImpuestoPorc = 13, Stock = 4, ImagenUrl = "https://i.pinimg.com/736x/99/51/47/995147af7dd2db28d2892b725b8232c3.jpg", Activo = true },
-                        new Producto { Nombre = "Camiseta Vintage DC", CategoriaId = catCamisetas, Precio = 12000, ImpuestoPorc = 13, Stock = 3, ImagenUrl = "https://i.pinimg.com/1200x/13/47/3b/13473bf45852178d747248dbfebb6a00.jpg", Activo = true }
+                        new Producto { Nombre = "Pantalon JNCO Kangaroo", CategoriaId = catPantalones, Precio = 27000, ImpuestoPorc = 13, Stock = 4, Activo = true },
+                        new Producto { Nombre = "Camiseta Vintage DC", CategoriaId = catCamisetas, Precio = 12000, ImpuestoPorc = 13, Stock = 3, Activo = true }
                     );
                 }
 

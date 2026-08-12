@@ -8,7 +8,7 @@
 
 <div class="card p-3" style="max-width: 480px;">
     <div style="max-width: 200px;">
-        <partial name="_ImagenProducto" model="(Model.ImagenUrl, Model.Nombre)" />
+        <partial name="_ImagenProducto" model='(Url.Action("Imagen", "Productos", new { id = Model.Id })!, Model.Nombre)' />
     </div>
     <dl class="row mb-0 mt-3">
         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Nombre)</dt>
@@ -25,9 +25,6 @@
 
         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Stock)</dt>
         <dd class="col-sm-8">@Html.DisplayFor(model => model.Stock)</dd>
-
-        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ImagenUrl)</dt>
-        <dd class="col-sm-8">@Html.DisplayFor(model => model.ImagenUrl)</dd>
 
         <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Activo)</dt>
         <dd class="col-sm-8">@(Model.Activo ? "Sí" : "No")</dd>

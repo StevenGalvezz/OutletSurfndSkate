@@ -30,8 +30,13 @@ namespace Pedidos360.Models
         [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo.")]
         public int Stock { get; set; }
 
-        [Required(ErrorMessage = "La imagen del producto es obligatoria.")]
-        public string ImagenUrl { get; set; } = null!;
+        // La foto se guarda directo en la base de datos (BLOB), no como URL
+        // externa: se sube un archivo desde ProductosController y se sirve de
+        // vuelta con GET /Productos/Imagen/{id}. No lleva [Required] porque
+        // Create la exige a mano (necesita validar el archivo, no solo el
+        // campo) y Edit la deja opcional para no obligar a resubirla.
+        public byte[]? ImagenData { get; set; }
+        public string? ImagenContentType { get; set; }
 
         public bool Activo { get; set; } = true;
     }

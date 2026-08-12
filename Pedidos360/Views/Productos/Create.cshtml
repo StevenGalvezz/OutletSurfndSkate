@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group mb-3">
@@ -44,9 +44,9 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="ImagenUrl" class="control-label"></label>
-                <input asp-for="ImagenUrl" class="form-control" />
-                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                <label for="imagen" class="control-label">Foto</label>
+                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" />
+                <div class="form-text">JPG, PNG, WEBP o GIF. Máximo 3 MB.</div>
             </div>
 
             <div class="form-group form-check mb-3">

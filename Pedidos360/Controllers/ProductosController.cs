@@ -44,6 +44,27 @@ public class ProductosController : Controller
         return View(producto);
     }
 
+    // GET: PRODUCTOS/Imagen/5 — sirve la foto guardada en la base como
+    // archivo binario. [AllowAnonymous] porque la Tienda y el Carrito
+    // (que no piden login para navegar) también la muestran; si el
+    // producto no tiene foto cargada, el 404 hace que el <img> de la vista
+    // caiga solo al ícono de "sin imagen" (ver _ImagenProducto.cshtml).
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Imagen(int id)
+    {
+        var producto = await _context.Productos
+            .Select(p => new { p.Id, p.ImagenData, p.ImagenContentType })
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (producto?.ImagenData == null || producto.ImagenData.Length == 0)
+        {
+            return NotFound();
+        }
+
+        return File(producto.ImagenData, producto.ImagenContentType ?? "application/octet-stream");
+    }
+
     // GET: PRODUCTOS/Create
     public IActionResult Create()
     {
@@ -54,10 +75,21 @@ public class ProductosController : Controller
     // POST: PRODUCTOS/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
+    public async Task<IActionResult> Create([Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,Activo")] Producto producto, IFormFile? imagen)
     {
+        if (imagen is not { Length: > 0 })
+        {
+            ModelState.AddModelError(string.Empty, "Debe subir una foto del producto.");
+        }
+        else if (!EsImagenValida(imagen, out var errorImagen))
+        {
+            ModelState.AddModelError(string.Empty, errorImagen);
+        }
+
         if (ModelState.IsValid)
         {
+            (producto.ImagenData, producto.ImagenContentType) = await LeerImagenAsync(imagen!);
+
             _context.Add(producto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -88,19 +120,46 @@ public class ProductosController : Controller
     // POST: PRODUCTOS/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,ImagenUrl,Activo")] Producto producto)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,CategoriaId,Precio,ImpuestoPorc,Stock,Activo")] Producto producto, IFormFile? imagen)
     {
-
         if (id != producto.Id)
         {
             return NotFound();
         }
 
+        if (imagen is { Length: > 0 } && !EsImagenValida(imagen, out var errorImagen))
+        {
+            ModelState.AddModelError(string.Empty, errorImagen);
+        }
+
         if (ModelState.IsValid)
         {
+            // Se trae la fila actual de la base y se le pisan solo los campos
+            // del formulario. Usar _context.Update(producto) acá marcaría
+            // ImagenData/ImagenContentType como modificados con sus valores
+            // por defecto (null), porque el model binder nunca los llena
+            // -- y borraría la foto cada vez que se edita el producto sin
+            // subir una nueva.
+            var productoDb = await _context.Productos.FindAsync(id);
+            if (productoDb == null)
+            {
+                return NotFound();
+            }
+
+            productoDb.Nombre = producto.Nombre;
+            productoDb.CategoriaId = producto.CategoriaId;
+            productoDb.Precio = producto.Precio;
+            productoDb.ImpuestoPorc = producto.ImpuestoPorc;
+            productoDb.Stock = producto.Stock;
+            productoDb.Activo = producto.Activo;
+
+            if (imagen is { Length: > 0 })
+            {
+                (productoDb.ImagenData, productoDb.ImagenContentType) = await LeerImagenAsync(imagen);
+            }
+
             try
             {
-                _context.Update(producto);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -159,5 +218,33 @@ public class ProductosController : Controller
     private bool ProductoExists(int? id)
     {
         return _context.Productos.Any(e => e.Id == id);
+    }
+
+    private static readonly string[] TiposDeImagenPermitidos = { "image/jpeg", "image/png", "image/webp", "image/gif" };
+    private const long TamanoMaximoImagenBytes = 3 * 1024 * 1024; // 3 MB alcanza de sobra para la foto de un producto
+
+    private static bool EsImagenValida(IFormFile imagen, out string error)
+    {
+        if (!TiposDeImagenPermitidos.Contains(imagen.ContentType))
+        {
+            error = "La foto debe ser JPG, PNG, WEBP o GIF.";
+            return false;
+        }
+
+        if (imagen.Length > TamanoMaximoImagenBytes)
+        {
+            error = "La foto no puede pesar más de 3 MB.";
+            return false;
+        }
+
+        error = string.Empty;
+        return true;
+    }
+
+    private static async Task<(byte[] Data, string ContentType)> LeerImagenAsync(IFormFile imagen)
+    {
+        using var stream = new MemoryStream();
+        await imagen.CopyToAsync(stream);
+        return (stream.ToArray(), imagen.ContentType);
     }
 }

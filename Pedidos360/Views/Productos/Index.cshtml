@@ -28,7 +28,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td style="width: 72px;"><partial name="_ImagenProducto" model="(item.ImagenUrl, item.Nombre)" /></td>
+                <td style="width: 72px;"><partial name="_ImagenProducto" model='(Url.Action("Imagen", "Productos", new { id = item.Id })!, item.Nombre)' /></td>
                 <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
                 <td><span class="badge text-bg-secondary">@item.Categoria?.Nombre</span></td>
                 <td class="text-end">@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
