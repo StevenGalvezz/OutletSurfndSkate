@@ -16,7 +16,7 @@ namespace Pedidos360.Services
             _logger = logger;
         }
 
-        public async Task<ResultadoPedido> CrearPedidoAsync(int clienteId, string usuarioId, IReadOnlyList<LineaPedidoInput> lineas)
+        public async Task<ResultadoPedido> CrearPedidoAsync(int clienteId, string usuarioId, IReadOnlyList<LineaPedidoInput> lineas, string estadoInicial = "Pendiente")
         {
             var resultado = new ResultadoPedido();
 
@@ -78,7 +78,7 @@ namespace Pedidos360.Services
                 Subtotal = totales.Subtotal,
                 Impuestos = totales.Impuestos,
                 Total = totales.Total,
-                Estado = "Pendiente"
+                Estado = estadoInicial
             };
 
             foreach (var linea in lineasCalculadas)
