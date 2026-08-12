@@ -20,29 +20,44 @@ else
 {
     <div class="row">
         <div class="col-md-8">
-            @foreach (var linea in Model.Lineas)
-            {
-                <div class="carrito-linea">
-                    <partial name="_ImagenProducto" model="(linea.Producto.ImagenUrl, linea.Producto.Nombre)" />
-                    <div class="info">
-                        <strong>@linea.Producto.Nombre</strong><br />
-                        <span class="text-muted">@linea.Producto.Precio.ToString("C", cultura) c/u</span>
+            <div class="carrito-lista">
+                @foreach (var linea in Model.Lineas)
+                {
+                    var alMaximo = linea.Cantidad >= linea.Producto.Stock;
+                    <div class="carrito-linea">
+                        <div class="miniatura">
+                            <partial name="_ImagenProducto" model="(linea.Producto.ImagenUrl, linea.Producto.Nombre)" />
+                        </div>
+
+                        <div class="info">
+                            <strong title="@linea.Producto.Nombre">@linea.Producto.Nombre</strong>
+                            <span class="precio-unit">@linea.Producto.Precio.ToString("C", cultura) c/u</span>
+                            @if (alMaximo)
+                            {
+                                <span class="nota-stock">Máximo disponible</span>
+                            }
+                        </div>
+
+                        <form asp-controller="Carrito" asp-action="Actualizar" method="post" class="form-cantidad">
+                            <input type="hidden" name="productoId" value="@linea.Producto.Id" />
+                            <div class="cantidad-control">
+                                <button type="button" class="btn-stepper" data-paso="-1" data-target="cant-@linea.Producto.Id" aria-label="Quitar una unidad">&minus;</button>
+                                <input type="number" id="cant-@linea.Producto.Id" name="cantidad" value="@linea.Cantidad" min="1" max="@linea.Producto.Stock" />
+                                <button type="button" class="btn-stepper" data-paso="1" data-target="cant-@linea.Producto.Id" aria-label="Agregar una unidad" @(alMaximo ? "disabled" : "")>+</button>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Actualizar</button>
+                        </form>
+
+                        <div class="linea-derecha">
+                            <div class="subtotal-linea-carrito">@linea.TotalLinea.ToString("C", cultura)</div>
+                            <form asp-controller="Carrito" asp-action="Quitar" method="post">
+                                <input type="hidden" name="productoId" value="@linea.Producto.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" aria-label="Quitar @linea.Producto.Nombre del carrito">Quitar</button>
+                            </form>
+                        </div>
                     </div>
-
-                    <form asp-controller="Carrito" asp-action="Actualizar" method="post" class="d-flex gap-2 align-items-center">
-                        <input type="hidden" name="productoId" value="@linea.Producto.Id" />
-                        <input type="number" name="cantidad" value="@linea.Cantidad" min="1" max="@linea.Producto.Stock" class="form-control" style="width: 80px;" />
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">Actualizar</button>
-                    </form>
-
-                    <strong style="min-width: 110px; text-align: right;">@linea.TotalLinea.ToString("C", cultura)</strong>
-
-                    <form asp-controller="Carrito" asp-action="Quitar" method="post">
-                        <input type="hidden" name="productoId" value="@linea.Producto.Id" />
-                        <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
-                    </form>
-                </div>
-            }
+                }
+            </div>
         </div>
 
         <div class="col-md-4">
@@ -52,9 +67,7 @@ else
                 <div class="fila"><span>Impuestos</span><span>@Model.Impuestos.ToString("C", cultura)</span></div>
                 <div class="fila total"><span>Total</span><span>@Model.Total.ToString("C", cultura)</span></div>
 
-                <form asp-controller="Carrito" asp-action="Confirmar" method="post">
-                    <button type="submit" class="btn btn-primary mt-3 w-100">Confirmar pedido</button>
-                </form>
+                <a asp-controller="Carrito" asp-action="Checkout" class="btn btn-primary mt-3 w-100">Ir al checkout</a>
                 <a asp-controller="Tienda" asp-action="Index" class="btn btn-outline-secondary mt-2 w-100">Seguir comprando</a>
             </div>
         </div>
