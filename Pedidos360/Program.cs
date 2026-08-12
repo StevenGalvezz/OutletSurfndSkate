@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pedidos360.Data;
@@ -83,6 +84,18 @@ namespace Pedidos360
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Detrás de Nginx (que termina TLS) Kestrel solo ve HTTP: sin esto,
+            // UseHttpsRedirection no se entera de que la conexión real ya es
+            // HTTPS y termina redirigiendo en bucle. Sin KnownProxies/KnownNetworks
+            // porque Nginx corre en el mismo host/red de Docker, no hace falta
+            // listar una IP fija.
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                KnownIPNetworks = { },
+                KnownProxies = { }
+            });
 
             // Captura cualquier excepción no controlada que ocurra en la aplicación
             // y redirige al usuario a la página personalizada del Error 500.
