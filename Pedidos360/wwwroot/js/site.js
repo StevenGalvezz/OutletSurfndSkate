@@ -20,9 +20,36 @@
     boton.addEventListener("click", function () {
         var nuevoTema = temaActual() === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", nuevoTema);
+        document.documentElement.setAttribute("data-bs-theme", nuevoTema);
         localStorage.setItem("tema", nuevoTema);
         actualizarTexto();
     });
 
     actualizarTexto();
+})();
+
+// Botones +/- de cantidad (carrito y tienda): solo ajustan el número en pantalla,
+// el formulario sigue mandando el valor final cuando se envía.
+(function () {
+    document.addEventListener("click", function (evento) {
+        var boton = evento.target.closest(".btn-stepper");
+        if (!boton) {
+            return;
+        }
+
+        var input = document.getElementById(boton.dataset.target);
+        if (!input) {
+            return;
+        }
+
+        var paso = Number(boton.dataset.paso);
+        var min = Number(input.min) || 1;
+        var max = Number(input.max) || Infinity;
+        var nuevoValor = Number(input.value) + paso;
+
+        if (nuevoValor < min) nuevoValor = min;
+        if (nuevoValor > max) nuevoValor = max;
+
+        input.value = nuevoValor;
+    });
 })();
