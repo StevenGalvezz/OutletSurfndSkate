@@ -158,7 +158,9 @@ namespace Pedidos360.Controllers
                 .Select(i => new LineaPedidoInput { ProductoId = i.ProductoId, Cantidad = i.Cantidad, Descuento = 0 })
                 .ToList();
 
-            var resultado = await _pedidoService.CrearPedidoAsync(miCliente.Id, usuarioId, lineas);
+            // el pago ya se aprobó arriba, así que el pedido no arranca en
+            // "Pendiente" (eso es para lo que arma el admin sin cobrar todavía)
+            var resultado = await _pedidoService.CrearPedidoAsync(miCliente.Id, usuarioId, lineas, estadoInicial: "Procesando");
 
             if (!resultado.Exitoso)
             {

@@ -1,7 +1,9 @@
-// Busca productos en vivo mientras se escribe, sin recargar la página:
-// pide el mismo listado ya armado en el servidor y reemplaza la cuadrícula.
+// Busca productos en vivo mientras se escribe o se cambia la categoría,
+// sin recargar la página: pide el mismo listado ya armado en el servidor
+// y reemplaza la cuadrícula.
 (function () {
     var buscador = document.getElementById("buscador-tienda");
+    var filtroCategoria = document.getElementById("filtro-categoria");
     var contenedor = document.getElementById("grid-productos-contenedor");
 
     if (!buscador || !contenedor) {
@@ -10,8 +12,12 @@
 
     var temporizador = null;
 
-    function buscar(termino) {
-        fetch("/Tienda/Buscar?termino=" + encodeURIComponent(termino))
+    function buscar() {
+        var termino = buscador.value.trim();
+        var categoriaId = filtroCategoria ? filtroCategoria.value : "";
+        var parametros = "termino=" + encodeURIComponent(termino) + "&categoriaId=" + encodeURIComponent(categoriaId);
+
+        fetch("/Tienda/Buscar?" + parametros)
             .then(function (respuesta) { return respuesta.text(); })
             .then(function (html) { contenedor.innerHTML = html; })
             .catch(function () {
@@ -21,7 +27,10 @@
 
     buscador.addEventListener("input", function () {
         clearTimeout(temporizador);
-        var termino = buscador.value.trim();
-        temporizador = setTimeout(function () { buscar(termino); }, 250);
+        temporizador = setTimeout(buscar, 250);
     });
+
+    if (filtroCategoria) {
+        filtroCategoria.addEventListener("change", buscar);
+    }
 })();

@@ -1,7 +1,9 @@
 @model IEnumerable<Pedidos360.Models.Producto>
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Tienda";
+    var categorias = (SelectList)ViewData["Categorias"]!;
 }
 
 <h1>Tienda</h1>
@@ -13,6 +15,9 @@
 
 <div class="buscador-tienda">
     <input type="text" id="buscador-tienda" class="form-control" placeholder="Buscar por nombre..." value="@ViewData["Termino"]" autocomplete="off" />
+    <select id="filtro-categoria" class="form-select" asp-items="categorias">
+        <option value="">Todas las categorías</option>
+    </select>
 </div>
 
 <div id="grid-productos-contenedor">

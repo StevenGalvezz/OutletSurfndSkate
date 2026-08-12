@@ -20,6 +20,9 @@ namespace Pedidos360.Services
     // validación y el mismo cálculo en dos lados.
     public interface IPedidoService
     {
-        Task<ResultadoPedido> CrearPedidoAsync(int clienteId, string usuarioId, IReadOnlyList<LineaPedidoInput> lineas);
+        // estadoInicial: "Pendiente" para lo que arma el admin a mano (todavía
+        // no hay pago registrado), "Procesando" para lo que ya pasó por el
+        // checkout con el pago simulado aprobado.
+        Task<ResultadoPedido> CrearPedidoAsync(int clienteId, string usuarioId, IReadOnlyList<LineaPedidoInput> lineas, string estadoInicial = "Pendiente");
     }
 }

@@ -93,19 +93,67 @@ header .navbar {
   background-color: var(--surface) !important;
   border-bottom: 2px solid var(--ink);
   box-shadow: none !important;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 .navbar-brand {
   font-weight: 700;
+  font-size: 1.15rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-/* Marca + acceso directo al carrito, siempre arriba a la izquierda */
-.marca-y-carrito {
+/* Fila del navbar: marca | enlaces | herramientas, con los enlaces
+   colapsando en mobile pero la marca y las herramientas (carrito,
+   cuenta) siempre visibles en la primera línea. */
+.navbar-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 24px;
+}
+
+.navbar-fila > .navbar-brand {
+  order: 1;
+  margin-right: 0;
+}
+
+.navbar-fila > .navbar-toggler {
+  order: 2;
+}
+
+.navbar-fila > .navbar-herramientas {
+  order: 3;
+  margin-left: auto;
+}
+
+.navbar-fila > .navbar-collapse {
+  order: 4;
+  flex-basis: 100%;
+}
+
+@media (min-width: 576px) {
+  .navbar-fila > .navbar-collapse {
+    order: 2;
+    flex-basis: content;
+  }
+}
+
+.navbar-herramientas {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+.navbar-enlaces {
+  align-items: center;
+}
+
+@media (min-width: 576px) {
+  .navbar-enlaces {
+    gap: 28px;
+  }
 }
 
 /* Acceso directo al carrito: mismo lenguaje visual que los botones
@@ -503,14 +551,39 @@ label {
    Tienda (catálogo del cliente)
    ========================================================== */
 .buscador-tienda {
-  max-width: 420px;
+  display: flex;
+  gap: 12px;
+  max-width: 640px;
   margin-bottom: 24px;
 }
 
 .buscador-tienda .form-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.buscador-tienda .form-control,
+.buscador-tienda .form-select {
   font-family: 'Oswald', sans-serif;
   font-size: 0.95rem;
   padding: 10px 14px;
+}
+
+.buscador-tienda .form-select {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 220px;
+}
+
+@media (max-width: 575px) {
+  .buscador-tienda {
+    flex-wrap: wrap;
+  }
+
+  .buscador-tienda .form-select {
+    flex: 1 1 100%;
+    max-width: none;
+  }
 }
 
 .sin-resultados-tienda {
