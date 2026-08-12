@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,13 @@ namespace Pedidos360
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            // Sin esto, las claves de Data Protection (cookies de sesión/login,
+            // tokens antiforgery) viven solo en el contenedor: cada restart las
+            // regenera y desloguea a todo el mundo. Las guardamos en la misma
+            // carpeta que la base SQLite, así quedan en el volumen persistente.
+            builder.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "keys")));
 
             // Sin RequireConfirmedAccount: el proyecto no tiene un correo real
             // configurado, así que un cliente que se registra puede entrar
